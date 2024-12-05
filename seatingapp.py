@@ -82,10 +82,20 @@ def run_main():
         else:
             employee = df.loc[df['STAFF ID'] == staff_id, 'EMPLOYEE'].values[0]
             table_no = df.loc[df['STAFF ID'] == staff_id, 'TABLE NO'].values[0]
-            st.markdown(
-                f"<div class='success'>🎉 Welcome <strong>{employee}</strong>! Your table number is: <strong>{table_no}</strong></div>", 
-                unsafe_allow_html=True
-            )
+
+            if pd.isna(table_no): ### NOT UPDATED
+                st.warning(f"Dear <strong>{employee}</strong>, your seating number is not assigned yet. Please contact the organizer")
+            
+            elif isinstance(table_no, str) and "to" in table_no: ### NORMAL ATTENDEES
+                st.markdown(
+                    f"<div class='success'>🎉 Welcome <strong>{employee}</strong>! You can seat anywhere between <strong>{table_no}</strong></div>", 
+                    unsafe_allow_html=True
+                )
+            else: ### AWARD RECIPIENTS
+                st.markdown(
+                    f"<div class='success'>🎉 Welcome <strong>{employee}</strong>! Your dedicated table number is: <strong>{table_no}</strong></div>", 
+                    unsafe_allow_html=True
+                )
     st.markdown("</div>", unsafe_allow_html=True)
 
     # Footer Section

@@ -3,11 +3,10 @@ import pandas as pd
 from telegram import Bot
 import os
 
+st.set_page_config(page_title="GITD Recognition Dinner 2024", page_icon="🍽")
 
 # Load the data from the Excel file
 data_path = "Sample Data.xlsx"
-BOT_TOKEN = os.getenv('BOT_TOKEN')
-CHAT_ID = os.getenv('CHAT_ID')
 
 def load_data(path):
     df = pd.read_excel(path)
@@ -81,7 +80,9 @@ def run_main():
     staff_id = st.text_input("Enter your Staff ID to find your seats:", label_visibility="visible").strip()
 
     # Validation and Output
-    if st.button("Confirm Attendance"):
+    if st.button("Check Seat Number"):
+        BOT_TOKEN = os.getenv('BOT_TOKEN')
+        CHAT_ID = os.getenv('CHAT_ID')
         if staff_id:
             if staff_id not in staff_id_list:
                 st.markdown("<div class='error'>🚫 Staff ID not found! Please try again, or contact the organizer.</div>", unsafe_allow_html=True)

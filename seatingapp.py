@@ -71,6 +71,7 @@ def run_main():
     )
 
     # Header Section
+    st.info("Interns, please check with the committee for your seat number.", icon="ℹ️")
     # st.markdown("<div class='header'>Welcome to</div>", unsafe_allow_html=True)
     st.markdown("<div class='sub-header'>Welcome to</div>", unsafe_allow_html=True)
     st.image("gitd_dinner_logo.png", use_container_width=True)
@@ -78,6 +79,7 @@ def run_main():
     # Input Section
     st.markdown("<div class='centered-content'>", unsafe_allow_html=True)
     staff_id = st.text_input("Enter your Staff ID to find your seats:", label_visibility="visible").strip()
+
 
     # Validation and Output
     # if st.button("Check Seat Number"):

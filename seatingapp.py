@@ -120,7 +120,18 @@ def run_main():
     st.markdown("</div>", unsafe_allow_html=True)
 
     # Footer Section
-    st.markdown("<div class='footer'>Powered by Streamlit | Organized by GITD</div>", unsafe_allow_html=True)
-
+    st.markdown("""
+        <style>
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 14px;
+            color: gray;
+        }
+        </style>
+        <div class='footer'>Powered by Streamlit | Organized by GITD</div>
+        """,
+        unsafe_allow_html=True,
+    )
 # Run the app
 run_main()

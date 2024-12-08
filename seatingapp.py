@@ -93,9 +93,9 @@ def run_main():
             if staff_id_lowcase not in staff_id_list_lowcase:
                 st.markdown("<div class='error'>🚫 Staff ID not found! Please try again, or contact the organizer.</div>", unsafe_allow_html=True)
             else:
-                employee = df.loc[df['STAFF ID'] == staff_id, 'EMPLOYEE'].values[0]
-                table_no = df.loc[df['STAFF ID'] == staff_id, 'TABLE NO'].values[0]
-                division = df.loc[df['STAFF ID'] == staff_id, 'DIV'].values[0]
+                employee = df.loc[df['STAFF ID'].str.lower() == staff_id_lowcase, 'EMPLOYEE'].values[0]
+                table_no = df.loc[df['STAFF ID'].str.lower() == staff_id_lowcase, 'TABLE NO'].values[0]
+                division = df.loc[df['STAFF ID'].str.lower() == staff_id_lowcase, 'DIV'].values[0]
 
                 if pd.isna(table_no): ### NOT UPDATED
                     st.warning(f"Dear **{employee}**, your seating number is not assigned yet. Please contact the organizer")

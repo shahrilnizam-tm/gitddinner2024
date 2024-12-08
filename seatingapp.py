@@ -6,7 +6,7 @@ import os
 st.set_page_config(page_title="GITD Recognition Dinner 2024", page_icon="🍽")
 
 # Load the data from the Excel file
-data_path = "Sample Data.xlsx"
+data_path = "List of Table Number_07122024.xlsx"
 
 def load_data(path):
     df = pd.read_excel(path)
@@ -17,6 +17,7 @@ def run_main():
     # Load data
     df = load_data(data_path)
     staff_id_list = df['STAFF ID'].tolist()
+    staff_id_list_lowcase = [item.lower() for item in staff_id_list]
 
     # Main app layout
     st.markdown(
@@ -79,43 +80,63 @@ def run_main():
     # Input Section
     st.markdown("<div class='centered-content'>", unsafe_allow_html=True)
     staff_id = st.text_input("Enter your Staff ID to find your seats:", label_visibility="visible").strip()
+    staff_id_lowcase = staff_id.lower()
 
-    col1, col2, col3 = st.columns(3)
+    # col1, col2, col3 = st.columns(3)
 
-    with col2:
+    # with col2:
     # Validation and Output
-        if st.button("Confirm Attendance"):
-            BOT_TOKEN = os.getenv('BOT_TOKEN')
-            CHAT_ID = os.getenv('CHAT_ID')
-            if staff_id:
-                if staff_id not in staff_id_list:
-                    st.markdown("<div class='error'>🚫 Staff ID not found! Please try again, or contact the organizer.</div>", unsafe_allow_html=True)
-                else:
-                    employee = df.loc[df['STAFF ID'] == staff_id, 'EMPLOYEE'].values[0]
-                    table_no = df.loc[df['STAFF ID'] == staff_id, 'TABLE NO'].values[0]
-
-                    if pd.isna(table_no): ### NOT UPDATED
-                        st.warning(f"Dear **{employee}**, your seating number is not assigned yet. Please contact the organizer")
-                    
-                    elif isinstance(table_no, str) and "to" in table_no: ### NORMAL ATTENDEES
-                        st.markdown(
-                            f"<div class='success'>🎉 Welcome <strong>{employee}</strong>! You can seat anywhere between the table <strong>{table_no}</strong></div>", 
-                            unsafe_allow_html=True
-                        )
-
-                        bot = Bot(token=BOT_TOKEN)
-                        bot.send_message(chat_id=CHAT_ID, text=f"{staff_id}, {employee}, {table_no}")
-
-                    else: ### AWARD RECIPIENTS
-                        st.markdown(
-                            f"<div class='success'>🎉 Welcome <strong>{employee}</strong>! Your dedicated table number is: <strong>{table_no}</strong></div>", 
-                            unsafe_allow_html=True
-                        )
-
-                        bot = Bot(token=BOT_TOKEN)
-                        bot.send_message(chat_id=CHAT_ID, text=f"{staff_id}, {employee}, {table_no}")
+    if st.button("Confirm Attendance"):
+        BOT_TOKEN = os.getenv('BOT_TOKEN')
+        CHAT_ID = os.getenv('CHAT_ID')
+        if staff_id:
+            if staff_id_lowcase not in staff_id_list_lowcase:
+                st.markdown("<div class='error'>🚫 Staff ID not found! Please try again, or contact the organizer.</div>", unsafe_allow_html=True)
             else:
-                pass
+                employee = df.loc[df['STAFF ID'] == staff_id, 'EMPLOYEE'].values[0]
+                table_no = df.loc[df['STAFF ID'] == staff_id, 'TABLE NO'].values[0]
+                division = df.loc[df['STAFF ID'] == staff_id, 'DIV'].values[0]
+
+                if pd.isna(table_no): ### NOT UPDATED
+                    st.warning(f"Dear **{employee}**, your seating number is not assigned yet. Please contact the organizer")
+                
+                elif isinstance(table_no, str) and "-" in table_no: ### NORMAL ATTENDEES
+                    st.markdown(
+                        f"<div class='success'>🎉 Welcome <strong>{employee}</strong> ({division})! You can seat anywhere between the table <strong>{table_no}</strong></div>", 
+                        unsafe_allow_html=True
+                    )
+
+                    bot = Bot(token=BOT_TOKEN)
+                    bot.send_message(chat_id=CHAT_ID, text=f"{staff_id}, {employee}, {division}, {table_no}")
+                
+                elif isinstance(table_no, str) and "Committee" in table_no: ### COMMITTEE
+                    st.markdown(
+                        f"<div class='success'>🎉 Welcome <strong>{employee}</strong> ({division})! You may proceed to the <strong>committee</strong> table</div>", 
+                        unsafe_allow_html=True
+                    )
+
+                    bot = Bot(token=BOT_TOKEN)
+                    bot.send_message(chat_id=CHAT_ID, text=f"{staff_id}, {employee}, {division}, {table_no}")
+
+                elif isinstance(table_no, str) and "VIP" in table_no: ### VIP
+                    st.markdown(
+                        f"<div class='success'>🎉 Welcome <strong>{employee}</strong> ({division})! You may proceed to the <strong>VIP</strong> table</div>", 
+                        unsafe_allow_html=True
+                    )
+
+                    bot = Bot(token=BOT_TOKEN)
+                    bot.send_message(chat_id=CHAT_ID, text=f"{staff_id}, {employee}, {division}, {table_no}")
+
+                else: ### AWARD RECIPIENTS
+                    st.markdown(
+                        f"<div class='success'>🎉 Welcome <strong>{employee}</strong> ({division})! Your dedicated table number is: <strong>{table_no}</strong></div>", 
+                        unsafe_allow_html=True
+                    )
+
+                    bot = Bot(token=BOT_TOKEN)
+                    bot.send_message(chat_id=CHAT_ID, text=f"{staff_id}, {employee}, {division}, {table_no}")
+        else:
+            pass
     
     st.markdown("</div>", unsafe_allow_html=True)
 

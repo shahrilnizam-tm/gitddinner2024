@@ -16,6 +16,7 @@ def load_data(path):
 def run_main():
     # Load data
     df = load_data(data_path)
+    df['STAFF ID'] = df['STAFF ID'].astype(str)
     staff_id_list = df['STAFF ID'].tolist()
     staff_id_list_lowcase = [item.lower() for item in staff_id_list]
 
